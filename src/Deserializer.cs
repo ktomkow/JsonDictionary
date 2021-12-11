@@ -6,6 +6,11 @@ namespace JsonDictionary
     {
         public static string Take(this string json, string property)
         {
+            if (string.IsNullOrWhiteSpace(property))
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
             return string.Empty;
         }
     }
