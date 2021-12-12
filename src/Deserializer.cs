@@ -15,7 +15,7 @@ namespace JsonDictionary
             {
                 int startIndex = json.IndexOf(property);
                 string secondHalf = json.Substring(startIndex).Split(":")[1].Trim();                
-                return secondHalf.Substring(0, secondHalf.Length - 1);
+                return secondHalf.Substring(0, secondHalf.Length - 1).Split(",")[0];
             }
 
             return string.Empty;

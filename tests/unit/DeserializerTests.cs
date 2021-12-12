@@ -40,7 +40,7 @@ namespace JsonDictionary.Tests
         }
 
         [Fact]
-        public void Take_IfSimpleValuePropertyExists_ShouldReturnIt()
+        public void Take_IfSimpleValuePropertyExistsAndIsOnlyOne_ShouldReturnIt()
         {
             string json = "{ \"dupa\": \"5\"}";
             string property = "dupa";
@@ -48,6 +48,17 @@ namespace JsonDictionary.Tests
             string result = json.Take(property);
 
             result.Should().Be("\"5\"");
+        }
+
+        [Fact]
+        public void Take_IfSimpleValuePropertyExists_ShouldReturnIt()
+        {
+            string json = "{ \"dupa\": \"dupaDrivenDebugging\", \"foo\":\"bar\"}";
+            string property = "dupa";
+
+            string result = json.Take(property);
+
+            result.Should().Be("\"dupaDrivenDebugging\"");
         }
     }
 }
