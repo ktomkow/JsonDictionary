@@ -13,8 +13,11 @@ namespace JsonDictionary
             }
 
             var result = new List<string>();
+            var resultValues = new List<string>();
             var starts = new List<int>();
             var ends = new List<int>();
+            var valueStarts = new List<int>();
+            var valueEnds = new List<int>();
             int nestLevel = -1;
             bool readingProperty = true;
             bool readingValue = false;
@@ -96,12 +99,25 @@ namespace JsonDictionary
                 if(analyzed == '"' && readingProperty == false)
                 {
                     readingValue = !readingValue;
+                    if(readingValue)
+                    {
+                        valueStarts.Add(i);
+                    }
+                    else
+                    {
+                        valueEnds.Add(i);
+                    }
                 }
             }
 
             for (int i = 0; i < starts.Count; i++)
             {
                 result.Add(json.Substring(starts[i] + 1, ends[i] - starts[i] - 1));
+            }
+
+            for (int i = 0; i < valueStarts.Count; i++)
+            {
+                resultValues.Add(json.Substring(valueStarts[i] + 1, valueEnds[i] - valueStarts[i] - 1));
             }
 
             return result;
