@@ -5,9 +5,65 @@ namespace JsonDictionary
 {
     public static class KeyFinder
     {
-        public static IEnumerable<string> GetKeys(this string json)
+        public static IEnumerable<string> Find(this string json)
         {
-            return Enumerable.Empty<string>();
+            if(string.IsNullOrWhiteSpace(json) || (json.Contains(':') == false))
+            {
+                return Enumerable.Empty<string>();
+            }
+
+            var result = new List<string>();
+            var starts = new List<int>();
+            var ends = new List<int>();
+            int nestLevel = -1;
+            bool readingProperty = true;
+            bool started = false;
+
+            for (int i = 0; i < json.Length; i++)
+            {
+                char analyzed = json[i];
+                if(analyzed == '{')
+                {
+                    nestLevel++;
+                }
+                
+                if (analyzed == '}')
+                {
+                    nestLevel--;
+                }
+
+
+                if(analyzed == ':')
+                {
+                    readingProperty = !readingProperty; 
+                }
+
+                if (nestLevel != 0)
+                {
+                    continue;
+                }
+
+                if (analyzed == '"' && readingProperty)
+                {
+                    if(started)
+                    {
+                        ends.Add(i);
+                    }
+                    else
+                    {
+                        starts.Add(i);   
+                    }
+
+                    started = !started;
+                }
+            }
+
+            for (int i = 0; i < starts.Count; i++)
+            {
+                result.Add(json.Substring(starts[i] + 1, ends[i] - starts[i] - 1));
+            }
+
+            return result;
         }
     }
 }

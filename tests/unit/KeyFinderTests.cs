@@ -24,5 +24,16 @@ namespace JsonDictionary.Tests
 
             result.Should().BeEmpty();
         }
+
+
+        [Fact]
+        public void GeyKeys_IfOneSimpleEntity_ShouldReturnItsName()
+        {
+            string json = "{\"foo\":\"bar\"}";
+
+            var result = json.Find();
+
+            result.Should().Contain("foo");
+        }
     }
 }
