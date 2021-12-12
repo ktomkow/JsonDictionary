@@ -10,7 +10,7 @@ namespace JsonDictionary
             {
                 throw new ArgumentNullException(nameof(property));
             }
-
+             
             if(json.Contains(property))
             {
                 int startIndex = json.IndexOf(property);
