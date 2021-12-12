@@ -38,5 +38,16 @@ namespace JsonDictionary.Tests
 
             act.Should().Throw<ArgumentNullException>();
         }
+
+        [Fact]
+        public void Take_IfSimpleValuePropertyExists_ShouldReturnIt()
+        {
+            string json = "{ \"dupa\": \"5\"}";
+            string property = "dupa";
+
+            string result = json.Take(property);
+
+            result.Should().Be("\"5\"");
+        }
     }
 }
