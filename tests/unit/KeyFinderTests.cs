@@ -35,5 +35,17 @@ namespace JsonDictionary.Tests
 
             result.Should().Contain("foo");
         }
+
+        [Fact]
+        public void GeyKeys_IfTwoSimpleEntities_ShouldReturnBoth()
+        {
+            string json = "{\"foo\":\"bar\", \"dupa\" : \"debug\"}";
+
+            var result = json.Find();
+
+            result.Should().Contain("foo", "dupa");
+
+            result.Should().NotContain("bar", "dupa");
+        }
     }
 }

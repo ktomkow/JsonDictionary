@@ -19,6 +19,8 @@ namespace JsonDictionary
             bool readingProperty = true;
             bool started = false;
 
+            int j = 0;
+
             for (int i = 0; i < json.Length; i++)
             {
                 char analyzed = json[i];
@@ -32,7 +34,6 @@ namespace JsonDictionary
                     nestLevel--;
                 }
 
-
                 if(analyzed == ':')
                 {
                     readingProperty = !readingProperty; 
@@ -43,18 +44,33 @@ namespace JsonDictionary
                     continue;
                 }
 
-                if (analyzed == '"' && readingProperty)
+                if(readingProperty)
                 {
-                    if(started)
+                    if (analyzed == '"')
                     {
-                        ends.Add(i);
-                    }
-                    else
-                    {
-                        starts.Add(i);   
-                    }
+                        if (started)
+                        {
+                            ends.Add(i);
+                        }
+                        else
+                        {
+                            starts.Add(i);
+                        }
 
-                    started = !started;
+                        started = !started;
+                    }
+                }
+                else
+                {
+                    if (analyzed == '"')
+                    {
+                        j++;
+                        if(j == 2)
+                        {
+                            j = 0;
+                            readingProperty = false;
+                        }
+                    }
                 }
             }
 
