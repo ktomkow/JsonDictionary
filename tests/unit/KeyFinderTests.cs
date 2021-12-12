@@ -79,6 +79,20 @@ namespace JsonDictionary.Tests
         }
 
         [Fact]
+        public void GeyKeys_IfTwoSimpleEntitiesFirstContainComa_ShouldReturnBoth()
+        {
+            string json = "{\"foo\":\"Hi, Mike\", \"dupa\" : \"debug\"}";
+
+            var result = json.Find();
+
+            string[] expected = new[] { "foo", "dupa" };
+            result.Should().Contain(expected);
+
+            string[] notExpected = new[] { "Hi, Mike", "debug" };
+            result.Should().NotContain(notExpected);
+        }
+
+        [Fact]
         public void GeyKeys_IfOneSimpleEntityAndOneObject_ShouldReturnBoth()
         {
             string json = "{\"foo\":\"bar\", \"dupa\" : { \"id\": \"abcdefgh\"}  }";

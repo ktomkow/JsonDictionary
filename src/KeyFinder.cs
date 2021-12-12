@@ -17,7 +17,9 @@ namespace JsonDictionary
             var ends = new List<int>();
             int nestLevel = -1;
             bool readingProperty = true;
+            bool readingValue = false;
             bool started = false;
+            bool isAfterFirstColon = false;
 
             int j = 0;
 
@@ -27,16 +29,29 @@ namespace JsonDictionary
                 if(analyzed == '{')
                 {
                     nestLevel++;
+                    if(isAfterFirstColon)
+                    {
+                        readingProperty = false;
+                        readingValue = true;
+                    }
                 }
                 
                 if (analyzed == '}')
                 {
                     nestLevel--;
+                    if(nestLevel == 0)
+                    {
+                        readingValue = false;
+                    }
                 }
 
                 if(analyzed == ':')
                 {
-                    readingProperty = !readingProperty; 
+                    readingProperty = !readingProperty;
+                    if (!isAfterFirstColon)
+                    {
+                        isAfterFirstColon = true;
+                    }
                 }
 
                 if (nestLevel != 0)
@@ -44,7 +59,7 @@ namespace JsonDictionary
                     continue;
                 }
 
-                if (readingProperty == false && analyzed == ',')
+                if (readingProperty == false && analyzed == ',' && readingValue == false)
                 {
                     readingProperty = !readingProperty;
                 }
@@ -76,6 +91,11 @@ namespace JsonDictionary
                             readingProperty = false;
                         }
                     }
+                }
+
+                if(analyzed == '"' && readingProperty == false)
+                {
+                    readingValue = !readingValue;
                 }
             }
 
