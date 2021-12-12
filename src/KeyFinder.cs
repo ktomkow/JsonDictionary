@@ -44,6 +44,11 @@ namespace JsonDictionary
                     continue;
                 }
 
+                if (readingProperty == false && analyzed == ',')
+                {
+                    readingProperty = !readingProperty;
+                }
+
                 if(readingProperty)
                 {
                     if (analyzed == '"')
