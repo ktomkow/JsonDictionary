@@ -37,15 +37,45 @@ namespace JsonDictionary.Tests
         }
 
         [Fact]
+        public void GeyKeys_IfOneSimpleEntityButNumber_ShouldReturnItsName()
+        {
+            string json = "{\"id\" : 13}";
+
+            var result = json.Find();
+
+            string[] expected = new[] { "id" };
+            result.Should().Contain(expected);
+
+            string[] notExpected = new[] { "13" };
+            result.Should().NotContain(notExpected);
+        }
+
+        [Fact]
+        public void GeyKeys_IfTwoSimpleEntitiesButNumbers_ShouldReturnBoth()
+        {
+            string json = "{\"id\" : 13, \"number\": 52}";
+
+            var result = json.Find();
+
+            string[] expected = new [] { "id", "number"};
+            result.Should().Contain(expected);
+
+            string[] notExpected = new[] { "13", "52" };
+            result.Should().NotContain(notExpected);
+        }
+
+        [Fact]
         public void GeyKeys_IfTwoSimpleEntities_ShouldReturnBoth()
         {
             string json = "{\"foo\":\"bar\", \"dupa\" : \"debug\"}";
 
             var result = json.Find();
 
-            result.Should().Contain("foo", "dupa");
+            string[] expected = new[] { "foo", "dupa" };
+            result.Should().Contain(expected);
 
-            result.Should().NotContain("bar", "dupa");
+            string[] notExpected = new[] { "bar", "dupa" };
+            result.Should().NotContain(notExpected);
         }
 
         [Fact]
@@ -55,9 +85,11 @@ namespace JsonDictionary.Tests
 
             var result = json.Find();
 
-            result.Should().Contain("foo", "dupa");
+            string[] expected = new[] { "foo", "dupa" };
+            result.Should().Contain(expected);
 
-            result.Should().NotContain("bar", "abcdefgh");
+            string[] notExpected = new[] { "bar", "abcdefgh" };
+            result.Should().NotContain(notExpected);
         }
     }
 }
