@@ -74,7 +74,7 @@ namespace JsonDictionary.Tests
             string[] expected = new[] { "foo", "dupa" };
             result.Should().Contain(expected);
 
-            string[] notExpected = new[] { "bar", "dupa" };
+            string[] notExpected = new[] { "bar", "debug" };
             result.Should().NotContain(notExpected);
         }
 
