@@ -34,6 +34,23 @@ namespace JsonDictionary.Tests.JsonTests
         }
 
         [Fact]
+        public void DupaDupcia()
+        {
+            string jsonAsText = "{\"dupa\":\"abc\", \"debugg\":\"ddd\"}";
+            Json json = new Json(jsonAsText);
+
+            Json value = json["dupa"];
+            Json secondValue = json["debugg"];
+
+            string[] expected = new[] { "dupa", "debugg" };
+            json.Keys.Should().Contain(expected);
+
+
+            value.Value.Should().Be("abc");
+            secondValue.Value.Should().Be("ddd");
+        }
+
+        [Fact]
         public void Null()
         {
             string key = "cycki";
