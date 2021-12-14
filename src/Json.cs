@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace JsonDictionary
 {
@@ -41,7 +43,97 @@ namespace JsonDictionary
 
         private IDictionary<string, Json> FindKeysAndValues()
         {
-            return new Dictionary<string, Json>();
+            var result = new Dictionary<string, Json>();
+
+            var keyBuilder = new StringBuilder();
+            var valueBuilder = new StringBuilder();
+            int nestLevel = 0;
+            bool readingKey = false;
+            bool keyRead = false;
+
+            bool readingValue = false;
+            bool valueRead = false;
+
+            foreach (char character in this.Value)
+            {
+                if (character == '{')
+                {
+                    nestLevel++;
+                }
+
+                if (nestLevel > 1)
+                {
+                    valueBuilder.Append(character);
+                }
+
+                if (character == '}')
+                {
+                    nestLevel--; 
+                    if(nestLevel == 1)
+                    {
+                        valueRead = true;
+                    }
+                }
+
+                if (nestLevel > 1)
+                {
+                    continue;
+                }
+
+                if (character == '"' && readingKey == false && keyRead == false)
+                {
+                    readingKey = true;
+                    continue;
+                }
+
+                if (character == '"' && readingKey == true && keyRead == false)
+                {
+                    keyRead = true;
+                    readingKey = false;
+                    continue;
+                }
+
+                if(character == '"' && keyRead && readingValue == false)
+                {
+                    readingValue = true;
+                    continue;
+                }
+
+                if(valueRead || (character == '"' && keyRead && readingValue == true))
+                {
+                    string key = keyBuilder.ToString();
+                    string value = valueBuilder.ToString();
+                    result[key] = new Json(value);
+                    readingValue = false;
+                    keyBuilder.Clear();
+                    valueBuilder.Clear();
+                    keyRead = false;
+                    readingValue = false;
+                    valueRead = false;
+                    continue;
+                }
+
+                if(readingKey)
+                {
+                    keyBuilder.Append(character);
+                    continue;
+                }
+
+                if(readingValue)
+                {
+                    valueBuilder.Append(character);
+                    continue;
+                }
+
+                if (keyRead == false && character == ':')
+                {
+                    keyRead = true;
+                    continue;
+                }
+            }
+
+            IDictionary<string, Json> r = result.Where(x => string.IsNullOrWhiteSpace(x.Key) == false).ToDictionary(x => x.Key, y => y.Value);
+            return r;
         }
     }
 }

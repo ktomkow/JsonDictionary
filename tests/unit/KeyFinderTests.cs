@@ -10,7 +10,7 @@ namespace JsonDictionary.Tests
         {
             string json = "{ }";
 
-            var result = json.GetKeys();
+            var result = json.Find();
 
             result.Should().BeEmpty();
         }
@@ -20,7 +20,7 @@ namespace JsonDictionary.Tests
         {
             string json = null;
 
-            var result = json.GetKeys();
+            var result = json.Find();
 
             result.Should().BeEmpty();
         }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
@@ -18,9 +20,34 @@ namespace JsonDictionary.Tests.JsonTests
         [Fact]
         public void Dupa()
         {
-            string key = "key key";
-            Json json = new Json(key);
+            string key = "dupa";
+            string jsonAsText = "{\"dupa\":\"abc\"}";
+            Json json = new Json(jsonAsText);
 
+            Json value = json[key];
+
+            string[] expected = new[] { "dupa" };
+            json.Keys.Should().Contain(expected);
+
+            
+            value.Value.Should().Be("abc");
+        }
+
+
+        [Fact]
+        public void Dupa2()
+        {
+            string key = "dupa";
+            string jsonAsText = "{\"dupa\": {\"drugadupa\":\"abcd\"}}";
+            Json json = new Json(jsonAsText);
+
+            Json value = json[key];
+
+            string[] expected = new[] { "dupa" };
+            json.Keys.Should().Contain(expected);
+            json.Keys.Count().Should().Be(1);
+
+            value.Value.Should().Be("{\"drugadupa\":\"abcd\"}");
         }
     }
 }
