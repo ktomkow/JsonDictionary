@@ -33,6 +33,22 @@ namespace JsonDictionary.Tests.JsonTests
             value.Value.Should().Be("abc");
         }
 
+        [Fact]
+        public void Null()
+        {
+            string key = "cycki";
+            string jsonAsText = "{\"cycki\":null}";
+            Json json = new Json(jsonAsText);
+
+            Json value = json[key];
+
+            string[] expected = new[] { "cycki" };
+            json.Keys.Should().Contain(expected);
+
+
+            value.Value.Should().Be("null");
+        }
+
 
         [Fact]
         public void Dupa2()

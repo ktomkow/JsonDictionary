@@ -54,8 +54,12 @@ namespace JsonDictionary
             bool readingValue = false;
             bool valueRead = false;
 
+            int kk = 0;
+
             foreach (char character in this.Value)
             {
+                if (char.IsWhiteSpace(character)) continue;
+
                 if (character == '{')
                 {
                     nestLevel++;
@@ -72,6 +76,23 @@ namespace JsonDictionary
                     if(nestLevel == 1)
                     {
                         valueRead = true;
+                    }
+
+                    if(nestLevel == 0)
+                    {
+                        if (readingValue && valueRead == false && keyRead)
+                        {
+                            string key = keyBuilder.ToString();
+                            string value = valueBuilder.ToString();
+                            result[key] = new Json(value);
+                            readingValue = false;
+                            keyBuilder.Clear();
+                            valueBuilder.Clear();
+                            keyRead = false;
+                            readingValue = false;
+                            valueRead = false;
+                            continue;
+                        }
                     }
                 }
 
@@ -93,14 +114,27 @@ namespace JsonDictionary
                     continue;
                 }
 
-                if(character == '"' && keyRead && readingValue == false)
+                if (character == '"' && keyRead && readingValue == false)
                 {
                     readingValue = true;
                     continue;
                 }
 
-                if(valueRead || (character == '"' && keyRead && readingValue == true))
+                if (readingKey == false && keyRead == true && readingValue == false && valueRead == false && character == ':')
                 {
+                    kk = 1;
+                    readingValue = true;
+                    continue;
+                }
+
+                if (valueRead || (character == '"' && keyRead && readingValue))
+                {
+                    if (kk == 1)
+                    {
+                        kk = 0;
+                        continue;
+                    }
+
                     string key = keyBuilder.ToString();
                     string value = valueBuilder.ToString();
                     result[key] = new Json(value);
@@ -125,11 +159,7 @@ namespace JsonDictionary
                     continue;
                 }
 
-                if (keyRead == false && character == ':')
-                {
-                    keyRead = true;
-                    continue;
-                }
+
             }
 
             IDictionary<string, Json> r = result.Where(x => string.IsNullOrWhiteSpace(x.Key) == false).ToDictionary(x => x.Key, y => y.Value);
