@@ -55,6 +55,7 @@ namespace JsonDictionary
             bool valueRead = false;
 
             int kk = 0;
+            bool possibleNull = false;
 
             foreach (char character in this.Value)
             {
@@ -84,6 +85,11 @@ namespace JsonDictionary
                         {
                             string key = keyBuilder.ToString();
                             string value = valueBuilder.ToString();
+                            if(possibleNull && (value == "null" || value == "undefined"))
+                            {
+                                value = "";
+                            }
+
                             result[key] = new Json(value);
                             readingValue = false;
                             keyBuilder.Clear();
@@ -116,6 +122,7 @@ namespace JsonDictionary
 
                 if (character == '"' && keyRead && readingValue == false)
                 {
+                    possibleNull = false;
                     readingValue = true;
                     continue;
                 }
@@ -123,15 +130,16 @@ namespace JsonDictionary
                 if (readingKey == false && keyRead == true && readingValue == false && valueRead == false && character == ':')
                 {
                     kk = 1;
+                    possibleNull = true;
                     readingValue = true;
                     continue;
                 }
 
                 if (valueRead || (character == '"' && keyRead && readingValue))
                 {
-                    if (kk == 1)
+                    if (possibleNull)
                     {
-                        kk = 0;
+                        possibleNull = false;
                         continue;
                     }
 

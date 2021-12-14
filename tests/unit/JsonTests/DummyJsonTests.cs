@@ -46,6 +46,22 @@ namespace JsonDictionary.Tests.JsonTests
             json.Keys.Should().Contain(expected);
 
 
+            value.Value.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Null2()
+        {
+            string key = "cycki";
+            string jsonAsText = "{\"cycki\":\"null\"}";
+            Json json = new Json(jsonAsText);
+
+            Json value = json[key];
+
+            string[] expected = new[] { "cycki" };
+            json.Keys.Should().Contain(expected);
+
+
             value.Value.Should().Be("null");
         }
 
